@@ -8,8 +8,8 @@ export async function fetchJobs(query: string): Promise<Job[]> {
   const options = {
     method: "GET",
     headers: {
-      "x-rapidapi-key": "313f650458msh860da829fe051bbp1c9ccbjsnf34ee6510282",
-      "x-rapidapi-host": "jsearch.p.rapidapi.com",
+      "x-rapidapi-key": process.env.RAPIDAPI_KEY!,
+      "x-rapidapi-host": process.env.RAPIDAPI_HOST!,
     },
   };
 
