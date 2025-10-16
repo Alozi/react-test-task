@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Profile } from "../types/profile";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -21,7 +21,13 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function CreateProfilePage() {
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem("userProfile");
+    if (savedProfile) setProfile(JSON.parse(savedProfile));
+  }, []);
 
   const handleSubmit = (values: Profile) => {
     localStorage.setItem("userProfile", JSON.stringify(values));
@@ -33,10 +39,11 @@ export default function CreateProfilePage() {
       <h1 className="text-2xl font-semibold mb-6">Create Your Profile</h1>
       <Formik
         initialValues={{
-          name: "",
-          desiredJobTitle: "",
-          aboutMe: "",
+          name: profile?.name || "",
+          desiredJobTitle: profile?.desiredJobTitle || "",
+          aboutMe: profile?.aboutMe || "",
         }}
+        enableReinitialize={true}
         validationSchema={validationSchema}
         onSubmit={(values) => {
           console.log(values);
