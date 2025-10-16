@@ -51,7 +51,7 @@ export default function JobSearch() {
 
       <div className="grid gap-4">
         {jobs.map((job) => (
-          <JobItem item={job} key={job.job_title + job.employer_name} />
+          <JobItem item={job} key={job.job_id} />
         ))}
       </div>
     </div>
