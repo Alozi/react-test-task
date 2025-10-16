@@ -14,8 +14,6 @@ export default function JobSearch() {
   const { toggleLike, isJobLiked } = useLikedJobs();
   const [profile, setProfile] = useState<Profile | null>(null);
 
-  console.log(profile);
-
   useEffect(() => {
     const savedProfile = localStorage.getItem("userProfile");
     if (savedProfile) setProfile(JSON.parse(savedProfile));

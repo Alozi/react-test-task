@@ -11,8 +11,6 @@ export default function ProfilePage() {
     aboutMe: "",
   });
 
-  console.log(profile);
-
   useEffect(() => {
     const savedProfile = localStorage.getItem("userProfile");
     if (savedProfile) {

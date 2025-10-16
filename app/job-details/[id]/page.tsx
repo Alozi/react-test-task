@@ -4,8 +4,6 @@ import { JobDetailsPageProps } from "@/app/types/jobDetails";
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
   const job = await fetchJobDetails(params.id);
 
-  // console.log(job);
-
   if (!job) {
     return (
       <div className="max-w-3xl mx-auto p-6 text-center text-gray-500">
