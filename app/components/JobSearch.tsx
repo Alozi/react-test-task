@@ -2,12 +2,16 @@ import { useState } from "react";
 import type { Job } from "../types/job";
 import JobItem from "./JobItem";
 import { fetchJobs } from "../api/fetchJobs";
+import { useLikedJobs } from "../hooks/useLikedJobs";
 
 export default function JobSearch() {
   const [query, setQuery] = useState("");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const { likedJobs, toggleLike, isJobLiked } = useLikedJobs();
+  console.log(likedJobs);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +55,12 @@ export default function JobSearch() {
 
       <div className="grid gap-4">
         {jobs.map((job) => (
-          <JobItem item={job} key={job.job_id} />
+          <JobItem
+            item={job}
+            key={job.job_id}
+            toggleLike={toggleLike}
+            isJobLiked={isJobLiked}
+          />
         ))}
       </div>
     </div>
