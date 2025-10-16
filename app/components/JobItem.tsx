@@ -14,7 +14,7 @@ export default function JobItem({
   return (
     <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition relative">
       <Link href={`/job-details/${item.job_id}`}>
-        <h2 className="font-semibold text-lg">{item.job_title}</h2>
+        <h2 className="font-semibold text-lg underline">{item.job_title}</h2>
       </Link>
       <button
         onClick={() => toggleLike(item)}

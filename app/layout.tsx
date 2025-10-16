@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Image from "next/image";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +27,50 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20"
       >
+        <header className="flex gap-[24px] flex-wrap items-center justify-center">
+          <Link href="/" className="text-blue-600 hover:underline font-medium">
+            Home
+          </Link>
+          <Link
+            href="/create-profile"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Create Profile page
+          </Link>
+          <Link
+            href="/profile"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Profile page
+          </Link>
+          <Link
+            href="/liked"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            ❤️ Liked
+          </Link>
+        </header>
         {children}
+        <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+          <a
+            className="flex items-center gap-2 underline"
+            href="https://www.linkedin.com/in/victoria-bogutska-1135a923b"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              aria-hidden
+              src="/globe.svg"
+              alt="Globe icon"
+              width={16}
+              height={16}
+            />
+            Victoria Bogutska Linkedin
+          </a>
+        </footer>
       </body>
     </html>
   );
