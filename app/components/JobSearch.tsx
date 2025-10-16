@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Job } from "../types/job";
 import JobItem from "./JobItem";
 import { fetchJobs } from "../api/fetchJobs";
 import { useLikedJobs } from "../hooks/useLikedJobs";
+import { Profile } from "../types/profile";
 
 export default function JobSearch() {
   const [query, setQuery] = useState("");
@@ -10,10 +11,38 @@ export default function JobSearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { likedJobs, toggleLike, isJobLiked } = useLikedJobs();
-  console.log(likedJobs);
+  const { toggleLike, isJobLiked } = useLikedJobs();
+  const [profile, setProfile] = useState<Profile | null>(null);
 
-  const handleSearch = async (e: React.FormEvent) => {
+  console.log(profile);
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem("userProfile");
+    if (savedProfile) setProfile(JSON.parse(savedProfile));
+  }, []);
+
+  useEffect(() => {
+    const searchTerm = profile?.desiredJobTitle || "";
+    if (searchTerm) {
+      setQuery(searchTerm);
+      handleSearch(searchTerm);
+    }
+  }, [profile]);
+
+  async function handleSearch(searchTerm: string) {
+    setLoading(true);
+    try {
+      const result = await fetchJobs(searchTerm);
+      setJobs(result);
+    } catch (error) {
+      console.error(error);
+      setJobs([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!query.trim()) return;
 
@@ -29,12 +58,12 @@ export default function JobSearch() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <div className="w-3xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center">Job Search</h1>
-      <form onSubmit={handleSearch} className="flex gap-2 mb-6">
+      <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
         <input
           type="text"
           placeholder="Search jobs by title..."
