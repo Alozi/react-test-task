@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { Job } from "../types/job";
 
 export function useLikedJobs() {
-  const [likedJobs, setLikedJobs] = useState<Job[]>([]);
+  const [likedJobs, setLikedJobs] = useState<Job[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("likedJobs");
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
 
   useEffect(() => {
     const saved = localStorage.getItem("likedJobs");
