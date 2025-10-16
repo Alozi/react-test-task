@@ -1,10 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import JobItem from "../components/JobItem";
 import { useLikedJobs } from "../hooks/useLikedJobs";
 
 export default function LikedJobsPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const { likedJobs, toggleLike, isJobLiked } = useLikedJobs();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return <p className="text-center text-gray-600 mt-10">Loading...</p>;
+  }
 
   if (likedJobs.length === 0) {
     return (
