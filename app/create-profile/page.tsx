@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import type { Profile } from "../types/profile";
-
-import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
@@ -85,7 +83,6 @@ export default function CreateProfilePage() {
             {errors.aboutMe && touched.aboutMe ? (
               <div className="text-red-500 text-sm mt-1">{errors.aboutMe}</div>
             ) : null}
-            {/* <button type="submit">Submit</button> */}
             <button
               type="submit"
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"

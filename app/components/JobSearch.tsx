@@ -4,9 +4,17 @@ import JobItem from "./JobItem";
 import { fetchJobs } from "../api/fetchJobs";
 import { useLikedJobs } from "../hooks/useLikedJobs";
 import { Profile } from "../types/profile";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+  query: Yup.string()
+    .min(2, "Too Short!")
+    .max(50, "Too Long!")
+    .required("Required"),
+});
 
 export default function JobSearch() {
-  const [query, setQuery] = useState("");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -20,30 +28,13 @@ export default function JobSearch() {
   }, []);
 
   useEffect(() => {
-    const searchTerm = profile?.desiredJobTitle || "";
-    if (searchTerm) {
-      setQuery(searchTerm);
-      handleSearch(searchTerm);
+    const query = profile?.desiredJobTitle || "";
+    if (query) {
+      handleSubmit(query);
     }
   }, [profile]);
 
-  async function handleSearch(searchTerm: string) {
-    setLoading(true);
-    try {
-      const result = await fetchJobs(searchTerm);
-      setJobs(result);
-    } catch (error) {
-      console.error(error);
-      setJobs([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!query.trim()) return;
-
+  async function handleSubmit(query: string) {
     setLoading(true);
     setError("");
     setJobs([]);
@@ -57,25 +48,38 @@ export default function JobSearch() {
       setLoading(false);
     }
   }
-
   return (
     <div className="w-3xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center">Job Search</h1>
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
-        <input
-          type="text"
-          placeholder="Search jobs by title..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-grow border border-gray-300 rounded-lg p-2"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 rounded-lg hover:bg-blue-700 transition"
-        >
-          Search
-        </button>
-      </form>
+
+      <Formik
+        initialValues={{ query: profile?.desiredJobTitle || "" }}
+        enableReinitialize={true}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          handleSubmit(values.query);
+        }}
+      >
+        {({ errors, touched }) => (
+          <Form className="flex gap-2 mb-6">
+            <Field
+              type="text"
+              name="query"
+              placeholder="Search jobs by title..."
+              className="flex-grow border border-gray-300 rounded-lg p-2"
+            />
+            {errors.query && touched.query ? (
+              <div className="text-red-500 text-sm mt-1">{errors.query}</div>
+            ) : null}
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              Search
+            </button>
+          </Form>
+        )}
+      </Formik>
 
       {loading && <p className="text-center text-gray-500">Loading...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
